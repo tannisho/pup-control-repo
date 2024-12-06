@@ -1,0 +1,71 @@
+---
+auditd::immutable: true
+
+timezone::use_debconf: false
+
+chrony::servers:
+  - '192.168.1.15'
+
+grub2::cmdline_linux: 'apparmor=1 security=apparmor'
+grub2::password: true
+grub2::password_username: grub_admin
+# yamllint disable-line rule:line-length
+grub2::password_pbkdf2_hash: 'grub.pbkdf2.sha512.10000.16FA59F4E5F528D7437D88329AA449EF16A5BB2C53BBA0D71802D6C1328BFF782D30265EE2290751CE4F182BEA1B3FC6327121B631E7C908F129B16DF11F0347.93FE5DAB4DD0B55426554FBAD11D3DB30B0AFB587547E17AAA56E1C8566FB49C76695B6FF085CEBC12592DE3F25F5923CBF8F44F92EE09A921279BA4A40BC937'
+
+issue::source: 'puppet:///modules/profile/issue/issue_net'
+
+ssh::server_options:
+  Banner: '/etc/issue.net'
+  ChallengeResponseAuthentication: yes
+  ClientAliveInterval: 300
+  ClientAliveCountMax: 3
+  PubkeyAuthentication: yes
+  PubkeyAcceptedKeyTypes: '+rsa'
+  PermitRootLogin: no
+  IgnoreRhosts: yes
+  HostbasedAuthentication: no
+  PermitEmptyPasswords: no
+  PermitUserEnvironment: no
+  MaxStartups: '10:30:60'
+  MaxSessions: 4
+  MaxAuthTries: 4
+  StrictModes: yes
+
+sudo::configs:
+  ladmin:
+    content: 'ladmin ALL=(ALL) NOPASSWD: ALL'
+
+sudo::defaults:
+  use_pty:
+  env_reset:
+  mail_badpass:
+  logfile:
+    value: '/var/log/sudo.log'
+  timestamp_timeout:
+    value: 5
+
+accounts::user_list:
+  ladmin:
+    home: '/var/local/ladmin'
+    shell: '/bin/bash'
+    password_max_age: 99999
+    # yamllint disable-line rule:line-length
+    password: 'ENC[PKCS7,MIIB2gYJKoZIhvcNAQcDoIIByzCCAccCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAY7YAXvdBEsp3Pb0rvgLxODHcOxjvhC2BTJYYFQaImw0b4l7VSDFru3eEDtRQrOkdvJh1WBbWdh02GwLRT2DeJA/8cz6Vi9lmTyeaTpETQJ7VJnVoSvB0YjKKTHfvuYOan5nan2b2yyGpRxu29G1SJFcJytSb2xsQJzoV4ZBcHcnXOWEQfoeYvHGtPP82qpuRTjdVck3NEZc4DnF5yhmngunGbvLNdrKIXsBGwuU1oP3mcYe6QjFRkTktAR643yUC/6FCd6NuDFzMTbgL3qkbNhd2Bxhn45KXo5aG/TCAr7F5mHwftcLJjyBBok/Vp/Xppy3TLSC3y5siLsBOwKS1zjCBnAYJKoZIhvcNAQcBMB0GCWCGSAFlAwQBKgQQN2fAjI3wz/yRgaqGiJ8M3IBwrnT1yq5GhIQM3vsrYyqN+560lwvux3nmCzq94Ec7SbtxkKSxMJtIZt8gPouiiskscjpY22XCZo+uRLdrzr3Ymk5PUt/r8gjRuuexnWQn435mVcm6vs9rLgFUCzj7bqI5j5Z88n9b9h30mnM/xfNaUA==]'
+#    sshkey_custom_path: '/etc/ssh/local_keys/ladmin'
+    # yamllint disable-line rule:line-length
+    sshkeys: ['ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDsUWBH4xgNrspHvB1cGZmYCk8miukFgvJb0jBBEdpqyNfkKpIdA+JSrArOiqNgAn3sMEW9ONMcFoEySufD//YxLPeSlVmHOIAsJs0qmMH/sU4ekDFtDx1E3CTO4ah6WSsV75ezaUbpoG5faaotKVkWxdzzTlQE7mREcTWuunWBtkVu5FHgU6NbeOeXqv3vshrpE0XVSe8LQ1x28YXYcHhsajdAKixaUuQgdrZKa1qYgHiccxIPIhCLCE/yCEmnqPyUELa06RXvj7LWYb2RH6/CPju+F1xcPjawKF7vbrXta5oEANbRlCDwDWu79RzV5R+qGSoLt28ssL0viEHfQLlOnug4psH8MzSIfKEIKBBsrPOqmt4d3regqpElJ8mwtqCoDvL1qHq1xgfdYH4G10a0CbbbMf/Z40Hl45u9DITkZT87g/RPWlvvo5wV7OnamlADjqjobYbYUPYvHBfcXWRQwyCdBr3iDT9vqDm8O3bylvWr3g1K2lsjYSByzuRi3a8= ladmin@localhost']
+
+## luks passwords
+# yamllint disable-line rule:line-length
+luks::kspass: 'ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAH7kN13graaI2fBdfzN7tpRkdsjuyz17Daicom0Q8tS/qQXu0nLim2CbHPxsAQbeKhJAHOf4uDLuAN525YYS2exLLVQoGpCEWTW/U32UbuDlCQtAuw5VmyTs0D3MT4qSZuClAYh1Iu7z8kUvJDPDggzY5Yt2ZPd4DZiS9RtOscIi4rylgWy/P+Lndx8PRYVIHtPETvsMe08v+nw4Q6LC4NiCjJTD2P/9P6od/+6NTvoCihTOS4Henl174Hx33rdB9Z3UI1Eqnh04F5OJnWJCdekNtTta29ey4ieypJp5lN+9Jk0m30qFzoHPaLVr3Mlu251FnFGx4yOoqQ7XhUOSsWTA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBDunvibhkwI97JxgpYn+dC/gBCBL6kRIYLeU6d31HrtDUWN]'
+# yamllint disable-line rule:line-length
+luks::szeropass: 'ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAPIl6Ozg2z4k5cqhMiIHpt08Ay36Ysig5jWam5+KAiwFxlG5KSF4dxm6FIfMS4pAdONufGrlUFz/NPkyoc8m9W/R8LxD16WIwGADQ4PW6YRP7JYKswy2EIpesqxg2U+KzNyHQUxRYM+xnrlsSYSbClcQJzh7X7Q/v9K5vferRVm/3ZC7MfLpvmxFvIrKUWBYUji66uq7Z1so3p1DUEEbG0OJk8pb3+dgwC9Zb/qTx0qra1qe6ORQZLBp3EXi/tYaORKqbRz3IUY+lStc0A+5rf+lYPSg9jTFYnfu3BfW8MjXTZ1cidLqQLwkq6Z3UmgdySUxOb1psxWh/895HNxqIOjA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBD05ZDWyeBrJvQ5lBp811/RgBDM6+ZKNUTy4baxLzfhBJWH]'
+# yamllint disable-line rule:line-length
+luks::sonepass: 'ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAQ229DqeD3dyxfpx13pw1pNXmk2rwnLE/dnND8fxEFEOwQzau1guIOpTk8fSBzVHQY0GV3lIKxBmUHIDeJzq2bLNjtHE1DJGRjtsKBiG2oB8I9x7mqFbhMTsFxXbmHv2Ir2c7X8TEy9enU3mnPG9PZBxrwki9pFBIWg+1BZlYtYzMmGkzyIgnJILyLII+rNu2TWNkGZgzDqCufbVDKfVcQPHLBERJjBuNXxth3SUKaMc+jGpJWdtPne3RdJSrjHc/IeblmOF4CLmKu+y1gfsfPqtYbEgG3DC9C+SmWwhAq96nahTZs7drx+IBTkkn+96PNBut9eQ7y3hwGLSXw7Mm7DA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBCuXvSTSSQs3jbMVAu7BX/7gBDfC3T+B2LQZM72iDaxRnIy]'
+
+## luks tang servers
+luks::wctangservers:
+  - 192.168.1.15
+
+luks::ectangservers:
+  - 192.168.1.16

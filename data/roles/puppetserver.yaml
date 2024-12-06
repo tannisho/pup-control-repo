@@ -1,0 +1,30 @@
+---
+# Keeping Puppet servers hardened to begin with
+selinux::ensure: 'enforcing'
+
+profile::puppetserver::r10k::config:
+  cachedir: /opt/puppetlabs/server/data/puppetserver/r10k
+  sources:
+    puppet:
+      basedir: /etc/puppetlabs/code/environments
+      remote: git@glibb.barsbug.com:cr/pup-control-repo.git
+
+  deploy:
+    generate_types: true
+
+#
+# yamllint disable-line rule:line-length
+profile::puppetserver::deploy_hook::svc_account_ssh_public_key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIATzT4M13drdQdNw31cRvoFUtdhT2kj8ZWrSGHutTE+/'
+
+# yamllint disable-line rule:line-length
+# yamllint disable-line rule:line-length
+profile::puppetserver::deploy_hook::svc_account_ssh_private_key: 'ENC[PKCS7,MIIDDQYJKoZIhvcNAQcDoIIC/jCCAvoCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAKVwO1jIzfhX6l7iJjJnMgqhShb3hJzHC0U9JHNoULrlQJrpsVo4LzbnEWrUjBI2p3sITq/86u+F4Klnt5qMLgLHAEV9T4QGWklY915qswiA29Lsq+EaVQrce6jlpb0tJbgk/z62EOBWspfSkGAc80HWtCEjSfxmaL8eRiKoHwUVdkYhxVm7lXmfFUwkMOY2uI60jjJUpRIwfKYEoW0mYwefaXIF0rFEDC+4aK+5HqLKjz7jMrTapm53aZl5TO3KsI28HhdZYBpS/A2BZey6hudc3hATBPVAe2WZU9PidwXe9wpylVrBHyoZ8Bmu38FWWHGXJ3LbII1i/GP1qmjFoojCCAc4GCSqGSIb3DQEHATAdBglghkgBZQMEASoEEAc2PhVLqnmPmFhvivQr8wuAggGgq8IhgA18inBAiuKhm6Uf5eF9npgY5ovTwESPF4nrEiuoZCZWUGXtwwTuASpQ8s4z7LNUN+yacauNRu0PvGOlT/Q1VNN58y2BzzqaQAFPVSX5imNqpdPAmw03oZ3KJe3LOXSPmhiNPIIRTUOS0e2Si7vV9rm3iP2RwrU4Raoi4IssCxU2ZeT1FT9FOIqt90p0nHpJDS+5aVIwkU73R+BAVVEuvzxeepku66whAL8cQLRElE78D2++xTSjemD13qT5Y/KIZpKccH0yUr0dezNt+eKTSWRyiZzFEbYrR4CLTT1g4fNBPsudpkRDP5yGeovtfnXMRWL5Tk02Qg9AQwedEy2oED+zkcTI+maIqokl+R/De7bTiF42LKV85ICOuvkkyhnwQ/vtfsvgTzeuZp5/Jnmhk/zCW8ib2Jv8XlDl21Gcwo/GupOqHg+SW6rSRgtnuFeY7LOj1EenQ0Ra8pw6k4qtWOR1zKr7f+stJvUPTaxgJmdgID1vAWrL65IrWvljgdNzM6UwGemhmXt1hgV3KuWskRS1F16GynCk/MGixl4=]'
+# yamllint disable-line rule:line-length
+
+profile::puppetserver::deploy_hook::svc_account_ssh_config: |
+  Host glibb.barsbug.com
+          Port 2200
+
+simp::client::simpserver: '%{facts.puppet_server}'
+simp::client::simpserver::local: 'pup0.barsbug.local'
+simp::client::simpserver::privip: '192.168.100.5'

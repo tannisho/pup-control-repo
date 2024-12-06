@@ -1,0 +1,22 @@
+---
+config:
+  transport: local
+  ssh:
+    host-key-check: false
+    native-ssh: false
+groups:
+- name: puppetservers
+  config:
+    transport: ssh
+    ssh:
+      user: puppet-deploy
+      private-key:
+        _plugin: env_var
+        var: PUPPET_DEPLOY_SSH_KEY
+        #default: totally_wrong_path_on_purpose_check_your_inventory_file
+        #host-key-check: false
+  targets:
+    - uri:   192.168.1.13
+      alias: puppetserver
+
+
