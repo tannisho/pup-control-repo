@@ -7,7 +7,7 @@ profile::puppetserver::r10k::config:
   sources:
     puppet:
       basedir: /etc/puppetlabs/code/environments
-      remote: git@glibb.barsbug.com:cr/pup-control-repo.git
+      remote: git@192.168.1.15:sanitized/pup-control-repo.git
 
   deploy:
     generate_types: true
@@ -22,9 +22,9 @@ profile::puppetserver::deploy_hook::svc_account_ssh_private_key: 'ENC[PKCS7,MIID
 # yamllint disable-line rule:line-length
 
 profile::puppetserver::deploy_hook::svc_account_ssh_config: |
-  Host glibb.barsbug.com
+  Host 192.168.1.15
           Port 2200
 
 simp::client::simpserver: '%{facts.puppet_server}'
-simp::client::simpserver::local: 'pup0.barsbug.local'
+simp::client::simpserver::local: 'pup0.localhost.local'
 simp::client::simpserver::privip: '192.168.100.5'

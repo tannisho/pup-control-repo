@@ -31,7 +31,7 @@ echo '' > /etc/security/pwquality.conf
 
 cryptsetup luksAddKey --key-file $WD/kspass -S 1 $DEV $WD/sonepass
 cryptsetup luksKillSlot --key-file $WD/sonepass $DEV 0
-cryptsetup luksAddKey --key-file $WD/sonepass -S 0 $DEV $WD/szeropass
+cryptsetup luksAddKey --pbkdf=pbkdf2 --cipher "aes-cbc-essiv:sha256" --key-file $WD/sonepass -S 0 $DEV $WD/szeropass
 cryptsetup luksKillSlot --key-file $WD/szeropass $DEV 1
 
 #for i in ${TS[@]}; do
